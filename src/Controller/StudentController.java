@@ -1,8 +1,6 @@
 package Controller;
-
 import Controller.Type.StudentProperty;
 import Entity.Student;
-import Entity.Type.ScoreType;
 
 import java.util.ArrayList;
 import java.util.stream.Collectors;
@@ -27,22 +25,22 @@ public class StudentController implements Controller<Student, StudentProperty> {
                     case ID -> student.getID().equalsIgnoreCase(searchValue);
                     case NAME -> student.getName().contains(searchValue);
                     case GENDER -> student.getGender().getDisplayText().equalsIgnoreCase(searchValue);
-                    case AGE -> String.valueOf(student.getAge()).equals(searchValue);
-                    case SCORE -> String.valueOf(student.getScores(ScoreType.NORMAL)).equalsIgnoreCase(searchValue);
-                    case MIDTERM -> String.valueOf(student.getScores(ScoreType.MIDTERM)).equalsIgnoreCase(searchValue);
-                    case FINALS -> String.valueOf(student.getScores(ScoreType.FINAL)).equalsIgnoreCase(searchValue);
+                    case BIRTH_YEAR -> String.valueOf(student.getBirthYear()).equals(searchValue);
+                    case ORIGINAL_CLASS -> student.getOriginalClass().equalsIgnoreCase(searchValue);
                     case GPA -> String.valueOf(student.getGPA().getDisplayText()).equals(searchValue);
                     case AVG_SCORE -> String.valueOf(student.getAvgScore()).equals(searchValue);
-                    case CAN_ATTEND_FINAL -> String.valueOf(student.canAttendFinal()).equalsIgnoreCase(searchValue);
+                    case ADDRESS ->  student.getAddress().equalsIgnoreCase(searchValue);
                 })
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
+    public boolean studentNotExists(Student targetStudent) {
+        return studentsList.stream().anyMatch(student -> student.getID().equals(targetStudent.getID()));
+    }
     @Override
     public boolean add(Student newStudent) {
         if (newStudent == null) { return false; }
-        boolean studentExists = studentsList.stream().anyMatch(student -> student.getID().equals(newStudent.getID()));
-        if (!studentExists) {
+        if (studentNotExists(newStudent)) {
             studentsList.add(newStudent);
             return true;
         }
@@ -52,5 +50,34 @@ public class StudentController implements Controller<Student, StudentProperty> {
     @Override
     public boolean remove(Student oldStudent) {
         return studentsList.removeIf(student -> student.getID().equals(oldStudent.getID()));
+    }
+
+    @Override
+    public boolean update(Student targetStudent, StudentProperty property, Object newValue) {
+        if (targetStudent == null || property == null) {
+            throw new IllegalArgumentException("Student and Property cannot be null");
+        }
+        if (studentNotExists(targetStudent)) {
+            return false;
+        }
+        switch (property) {
+            case ID:
+                targetStudent.setID((String) newValue);
+                break;
+            case NAME:
+                targetStudent.setName((String) newValue);
+                break;
+            case BIRTH_YEAR:
+                targetStudent.setBirthYear((int) newValue);
+                break;
+            case GENDER:
+                targetStudent.setGender((String) newValue);
+                break;
+            case AVG_SCORE:
+                targetStudent.setAvgScore((Double) newValue);
+            default:
+                throw new UnsupportedOperationException("Unknown property: " + property);
+        }
+        return true;
     }
 }

@@ -10,4 +10,5 @@ public interface Controller<T, E> {
     public ArrayList<T> filterBy(E property, String searchTerm);
     public boolean add(T newEntity);
     public boolean remove(T oldEntity);
+    public boolean update(T targetEntity,E property, Object newValue);
 }

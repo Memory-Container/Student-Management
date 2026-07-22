@@ -3,12 +3,10 @@ package Controller.Type;
 public enum StudentProperty {
     ID,
     NAME,
-    AGE,
+    BIRTH_YEAR,
     GENDER,
-    SCORE,
-    MIDTERM,
-    FINALS,
+    ORIGINAL_CLASS,
     GPA,
     AVG_SCORE,
-    CAN_ATTEND_FINAL,
+    ADDRESS
 }

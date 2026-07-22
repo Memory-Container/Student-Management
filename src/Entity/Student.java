@@ -1,34 +1,28 @@
 package Entity;
 import Entity.Type.Gender;
 import Entity.Type.LetterGrade;
-import Entity.Type.ScoreType;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class Student extends Person {
     private String ID;
-    private ArrayList<Score> scores;
-    private int missedAttendance;
+    private double avgScore;
     private String originalClass;
+    private String address;
     public Student(
             String name,
-            int age,
+            int birthYear,
             Gender gender,
             String ID,
             String originalClass,
-            ArrayList<Score> score,
-            int missedAttendance
+            String address,
+            double avgScore
     ) {
-        super(name, age, gender);
-        this.ID = ID;
-        this.scores = score;
-        this.originalClass = originalClass;
-        this.missedAttendance = missedAttendance;
+        super(name, birthYear, gender);
+        setID(ID);
+        setOriginalClass(originalClass);
+        setAvgScore(avgScore);
+        setAddress(address);
     }
     public void setID(String ID) { this.ID = ID; }
-
     public void setOriginalClass(String originalClass) {
         if (originalClass == null) { throw new IllegalArgumentException("Class code cannot be null"); }
         if (originalClass.length() < 7 || originalClass.length() > 14) {
@@ -36,40 +30,19 @@ public class Student extends Person {
         }
         this.originalClass = originalClass;
     }
-    public void setMissedAttendance(int missedAttendance) {
-        if (missedAttendance < 0) { throw new IllegalArgumentException("Missed attendance must be a positive number"); }
-        this.missedAttendance = missedAttendance;
+    public void setAddress(String address) {
+        if (address == null) { throw new IllegalArgumentException("Address cannot be null"); }
+        this.address = address;
     }
-
-    public double getAvgScore() {
-        double finalizedAverage = 0;
-        for (ScoreType type : ScoreType.values()) {
-            double categoryAverage = scores.stream()
-                    .filter(score -> score.getType() == type)
-                    .mapToDouble(Score::getValue)
-                    .average()
-                    .orElse(0);
-            finalizedAverage += categoryAverage * type.getWeight();
+    public void setAvgScore(double avgScore) {
+        if (avgScore < 0 || avgScore > 10) {
+            throw new IllegalArgumentException("Score value must be between 0 and 10");
         }
-        return Math.ceil(finalizedAverage * 100) / 100;
+        this.avgScore = avgScore;
     }
-
-    public boolean canAttendFinal() {
-        double midTermScore = scores.stream()
-                .filter(score -> score.getType() == ScoreType.MIDTERM)
-                .mapToDouble(Score::getValue)
-                .toArray()[0];
-        return missedAttendance < 3 && (midTermScore >= 1.0);
-    }
-
-    public ArrayList<Score> getScores(ScoreType scoreType) {
-        if (scores == null) { return new ArrayList<>(); }
-        return scores.stream()
-                .filter(score -> score.getType() == scoreType)
-                .collect(Collectors.toCollection(ArrayList::new));
-    }
-
-
+    public String getAddress() { return address; }
+    public double getAvgScore() { return Math.ceil(avgScore * 100) / 100; }
     public LetterGrade getGPA() { return LetterGrade.fromScore(getAvgScore()); }
     public String getID() { return ID; }
+    public String getOriginalClass() { return originalClass; }
 }
