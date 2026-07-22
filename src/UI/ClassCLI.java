@@ -59,4 +59,7 @@ public class ClassCLI extends CLI {
         );
         System.out.println(infoLine);
     }
+    public static void run() {
+
+    }
 }

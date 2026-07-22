@@ -9,7 +9,7 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        Student person = new Student("Diệp Đình Hiếu", 19, Gender.Male, "25695111", "DHKTPM21B", "xxxxxx", 8.65);
+        Student person = new Student("Diệp Đình Hiếu", 1900, Gender.Male, "25695111", "DHKTPM21B", "xxxxxx", 8.65);
         ClassCLI.printStudentInfo(person);
     }
 }
