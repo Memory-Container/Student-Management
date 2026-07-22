@@ -2,12 +2,20 @@ package Controller;
 import Controller.Type.StudentProperty;
 import Entity.Student;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class StudentController implements Controller<Student, StudentProperty> {
     protected ArrayList<Student> studentsList;
-    public StudentController(ArrayList<Student> student) { this.studentsList = student; }
 
     @Override
     public ArrayList<Student> getAll() { return studentsList; }
@@ -29,18 +37,18 @@ public class StudentController implements Controller<Student, StudentProperty> {
                     case ORIGINAL_CLASS -> student.getOriginalClass().equalsIgnoreCase(searchValue);
                     case GPA -> String.valueOf(student.getGPA().getDisplayText()).equals(searchValue);
                     case AVG_SCORE -> String.valueOf(student.getAvgScore()).equals(searchValue);
-                    case ADDRESS ->  student.getAddress().equalsIgnoreCase(searchValue);
+                    case ADDRESS ->  student.getAddress().contains(searchValue);
                 })
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public boolean studentNotExists(Student targetStudent) {
-        return studentsList.stream().anyMatch(student -> student.getID().equals(targetStudent.getID()));
+    public boolean studentNotExists(String ID) {
+        return studentsList.stream().anyMatch(student -> student.getID().equals(ID));
     }
     @Override
     public boolean add(Student newStudent) {
         if (newStudent == null) { return false; }
-        if (studentNotExists(newStudent)) {
+        if (studentNotExists(newStudent.getID())) {
             studentsList.add(newStudent);
             return true;
         }
@@ -57,7 +65,7 @@ public class StudentController implements Controller<Student, StudentProperty> {
         if (targetStudent == null || property == null) {
             throw new IllegalArgumentException("Student and Property cannot be null");
         }
-        if (studentNotExists(targetStudent)) {
+        if (studentNotExists(targetStudent.getID())) {
             return false;
         }
         switch (property) {
@@ -74,10 +82,22 @@ public class StudentController implements Controller<Student, StudentProperty> {
                 targetStudent.setGender((String) newValue);
                 break;
             case AVG_SCORE:
-                targetStudent.setAvgScore((Double) newValue);
+                targetStudent.setAvgScore((double) newValue);
+                break;
+            case ADDRESS:
+                targetStudent.setAddress((String) newValue);
+                break;
+            case ORIGINAL_CLASS:
+                targetStudent.setOriginalClass((String) newValue);
+                break;
             default:
                 throw new UnsupportedOperationException("Unknown property: " + property);
         }
         return true;
+    }
+
+    public Student findByID(String ID) {
+        Optional<Student> foundStudent = studentsList.stream().filter(student -> student.getID().equals(ID)).findFirst();
+        return foundStudent.orElse(null);
     }
 }

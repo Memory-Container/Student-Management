@@ -2,6 +2,15 @@ package UI;
 
 import Entity.Student;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+
 public class ClassCLI extends CLI {
     private static final int colNumberWidth = 6;
     private static final int colNameWidth = 23;
@@ -58,5 +67,30 @@ public class ClassCLI extends CLI {
                 avgScore
         );
         System.out.println(infoLine);
+    }
+    public static void exportAsFile(ArrayList<Student> students) {
+        StringBuilder sb = new StringBuilder();
+        for (Student student : students) {
+            sb.append(student.toString()).append("\n");
+        }
+
+        List<String> lines = List.of(sb.toString());
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
+        String timestamp = now.format(formatter);
+        String fileName = "StudentListExport(" + timestamp + ").txt";
+        String userHome = System.getProperty("user.home");
+        Path targetPath = Paths.get(userHome, "Downloads", fileName);
+        try {
+            Files.write(targetPath, lines);
+            System.out.println("File successfully saved to: " + targetPath.toAbsolutePath());
+        } catch (IOException e) {
+            System.err.println("Error saving file: " + e.getMessage());
+        }
+    }
+    public static void run() {
+        while (true) {
+
+        }
     }
 }

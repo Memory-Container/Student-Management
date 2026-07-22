@@ -4,14 +4,10 @@ public abstract class Person {
     private String name;
     private int birthYear;
     private Gender gender;
-    public Person(String name, int birthYear, Gender gender) {
-        setName(name);
-        setBirthYear(birthYear);
-        this.gender = gender;
-    }
     public String getName() { return name; }
     public void setName(String name) {
-        if (name == null || name.isBlank()) { throw new IllegalArgumentException("Name cannot be null or blank");}
+        if (name.length() < 3) { throw new IllegalArgumentException("Name must be at least 3 characters long"); }
+        if (name.isBlank()) { throw new IllegalArgumentException("Name cannot be null or blank");}
         this.name = name;
     }
     public int getBirthYear() { return birthYear; }

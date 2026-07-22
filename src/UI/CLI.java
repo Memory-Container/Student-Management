@@ -21,4 +21,8 @@ public abstract class CLI {
         int totalPadding = width - text.length();
         return text + " ".repeat(totalPadding);
     }
+    public static void clearConsole() {
+        int t = 50;
+        while (t-- > 0) System.out.println();
+    }
 }

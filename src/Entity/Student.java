@@ -7,22 +7,13 @@ public class Student extends Person {
     private double avgScore;
     private String originalClass;
     private String address;
-    public Student(
-            String name,
-            int birthYear,
-            Gender gender,
-            String ID,
-            String originalClass,
-            String address,
-            double avgScore
-    ) {
-        super(name, birthYear, gender);
-        setID(ID);
-        setOriginalClass(originalClass);
-        setAvgScore(avgScore);
-        setAddress(address);
+    public String getName() { return super.getName(); }
+    public Gender getGender() { return super.getGender(); }
+    public int getBirthYear() { return super.getBirthYear(); }
+    public void setID(String ID) {
+        if (ID.length() < 7) { throw new IllegalArgumentException("ID must have at least 7 characters"); }
+        this.ID = ID;
     }
-    public void setID(String ID) { this.ID = ID; }
     public void setOriginalClass(String originalClass) {
         if (originalClass == null) { throw new IllegalArgumentException("Class code cannot be null"); }
         if (originalClass.length() < 7 || originalClass.length() > 14) {
@@ -45,4 +36,16 @@ public class Student extends Person {
     public LetterGrade getGPA() { return LetterGrade.fromScore(getAvgScore()); }
     public String getID() { return ID; }
     public String getOriginalClass() { return originalClass; }
+
+    @Override
+    public String toString() {
+        return  getName()+"|"+
+                getBirthYear()+"|"+
+                getGender()+"|"+
+                getID()+"|"+
+                getOriginalClass()+"|"+
+                getGPA()+"|"+
+                getAvgScore()+"|"+
+                getAddress();
+    }
 }
