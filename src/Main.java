@@ -34,5 +34,5 @@ public class Main {
         StudentController controller = new StudentController((students));
         ClassCLI ui = new ClassCLI(controller);
         ui.run();
-    }
+    };
 }
