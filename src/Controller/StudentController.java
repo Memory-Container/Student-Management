@@ -33,9 +33,14 @@ public class StudentController implements Controller<Student, StudentProperty> {
                 })
                 .collect(Collectors.toCollection(ArrayList::new));
     }
+//
+//    public boolean studentNotExists(Student targetStudent) {
+//        return studentsList.stream().anyMatch(student -> student.getID().equals(targetStudent.getID()));
+//    } //logic bị ngược với tôi nên tôi sửa lại (có ít nhất một sinh viên có Id trùng --> true, ngược lại false
 
+    //đã sửa nghĩa là không co ID trùng --> true ngược false
     public boolean studentNotExists(Student targetStudent) {
-        return studentsList.stream().anyMatch(student -> student.getID().equals(targetStudent.getID()));
+        return studentsList.stream().noneMatch(student -> student.getID().equals(targetStudent.getID()));
     }
     @Override
     public boolean add(Student newStudent) {
